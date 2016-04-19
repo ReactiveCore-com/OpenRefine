@@ -26,4 +26,5 @@ tmp/
 /test-output
 /bin
 /deploy/*
+/target/*
 

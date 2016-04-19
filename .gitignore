@@ -25,3 +25,5 @@ broker/core/test-output/
 tmp/
 /test-output
 /bin
+/deploy/*
+

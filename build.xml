@@ -385,34 +385,31 @@
     </target>
 	
 	
-    <target name="orfatjar">
+    <target name="fatjar" depends="jar, prepare_webapp" >
     	
     	<jar destfile="openrefinefat.jar" filesetmanifest="mergewithoutmain">
+    		
     		<manifest>
     	        <attribute name="Main-Class" value="com.google.refine.Refine"/>
-    	        <attribute name="Class-Path" value="${linux.dir}/server/*"/>
+    	        <attribute name="Class-Path" value="${basedir}/server/lib/*"/>
     	    </manifest>
-    		<fileset excludes="META-INF/*.SF" dir="${linux.dir}" />
-    		<zipgroupfileset includes="*.jar" excludes="META-INF/*.SF" dir="${linux.dir}/server/lib"/>
+    		    		
+            <fileset dir="${basedir}">
+                <include name="server/lib/"/>
+            	<exclude name="META-INF/*.SF" />
+            </fileset>
+    		
+            <fileset dir="${build.dir}">
+                <include name="webapp/"/>
+            	<exclude name="META-INF/*.SF" />
+            </fileset>
+    		
+    		<zipgroupfileset includes="*.jar" excludes="META-INF/*.SF" dir="${basedir}/server/lib"/>
+    		
+    		<zipfileset src="${build.dir}/${fullname}-server.jar" />
 
     	</jar>
-    </target>
 
-    <target name="orfatjar1" depends="jar, prepare_webapp">
-    	<jar destfile="openrefinefat.jar">
-    		
-    		<fileset dir="/home/amir/projects/github/OpenRefine/build/" includes="webapp/" />
-    		<fileset dir="/home/amir/projects/github/OpenRefine/build/" includes="com/" />
-    		<zipfileset includes="*.jar" dir="${build.dir}" />
-            <zipfileset includes="*.jar" excludes="META-INF/*.SF" dir="${webapp.lib.dir}"/>
-        	<zipfileset includes="*.jar" excludes="META-INF/*.SF" dir="${server.lib.dir}"/>
-    		<zipfileset includes="*.jar" excludes="META-INF/*.SF" dir="/home/amir/projects/github/OpenRefine/extensions/gdata/module/MOD-INF/lib"/>
-    		
-            <manifest>
-                <attribute name="Main-Class" value="com.google.refine.Refine"/>
-            	<attribute name="Class-Path" value="${basedir}/build/."/>
-            </manifest>
-    	</jar>
     </target>
 	
     <target name="kits" depends="linux,mac,windows" 
@@ -598,22 +595,5 @@
         <delete dir="${dist.dir}" />
         <delete dir="${tools.dir}" />
     </target>
-
-    <!-- ================================================================== -->
-
-	
-    <!-- ================================================================== -->
-    <target name="create_run_jar">
-        <jar destfile="deploy/openrefine.jar" filesetmanifest="mergewithoutmain">
-            <manifest>
-                <attribute name="Main-Class" value="com.google.refine.Refine"/>
-                <attribute name="Class-Path" value="."/>
-            </manifest>
-            <fileset dir="${build.dir}" includes="com/" />
-            <!--<zipfileset includes="*.jar" excludes="META-INF/*.SF" dir="${webapp.lib.dir}"/>-->
-	    	<zipgroupfileset includes="*.jar" excludes="META-INF/*.SF" dir="${server.lib.dir}"/>
-        </jar>
-    </target>
-    <!-- ================================================================== -->
 	
 </project>

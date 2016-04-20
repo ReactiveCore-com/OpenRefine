@@ -385,20 +385,16 @@
     </target>
 	
 	
-    <target name="orfatjar" depends="linux, jar, prepare_webapp">
+    <target name="orfatjar">
     	
-        <manifestclasspath property="jar.classpath"
-                           jarfile="build/acme.jar">
-          <classpath refid="classpath" />
-        </manifestclasspath>
-    	
-    	<jar destfile="openrefinefat.jar">
-    		<zipfileset dir="${linux.dir}" />
-    		
-    	    <manifest>
+    	<jar destfile="openrefinefat.jar" filesetmanifest="mergewithoutmain">
+    		<manifest>
     	        <attribute name="Main-Class" value="com.google.refine.Refine"/>
-    	        <attribute name="Class-Path" path="server/classes:server/lib/*"/>
+    	        <attribute name="Class-Path" value="${linux.dir}/server/*"/>
     	    </manifest>
+    		<fileset excludes="META-INF/*.SF" dir="${linux.dir}" />
+    		<zipgroupfileset includes="*.jar" excludes="META-INF/*.SF" dir="${linux.dir}/server/lib"/>
+
     	</jar>
     </target>
 

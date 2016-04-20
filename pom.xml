@@ -2,7 +2,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.openrefine</groupId>
+    <groupId>org.reactivecore</groupId>
     <artifactId>openrefine</artifactId>
     <packaging>war</packaging>
     <version>2.6-SNAPSHOT</version>
@@ -17,8 +17,8 @@
     </properties>
 
     <scm>
-        <connection>scm:git:http://github.com/OpenRefine/OpenRefine</connection>
-        <url>http://github.com/OpenRefine/OpenRefine</url>
+        <connection>scm:git:http://github.com/ReactiveCore-com/OpenRefine</connection>
+        <url>http://github.com/ReactiveCore-com/OpenRefine</url>
     </scm>
 
     <build>

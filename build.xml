@@ -386,31 +386,39 @@
 	
 	
     <target name="fatjar" depends="jar, prepare_webapp" >
-    	
-    	<jar destfile="openrefinefat.jar" filesetmanifest="mergewithoutmain">
-    		
+    	<delete dir="fatjar" />    	
+    	<mkdir dir="fatjar"/>
+        <copy todir="fatjar/webapp">
+            <fileset dir="${built.webapp.dir}">
+                <include name="**"/>
+            	<exclude name="META-INF/*.SF" />
+            </fileset>
+        </copy>
+    	<jar destfile="fatjar/openrefinefat.jar" filesetmanifest="mergewithoutmain">
     		<manifest>
     	        <attribute name="Main-Class" value="com.google.refine.Refine"/>
     	        <attribute name="Class-Path" value="${basedir}/server/lib/*"/>
-    	    </manifest>
-    		    		
+    	    </manifest>	
             <fileset dir="${basedir}">
                 <include name="server/lib/"/>
             	<exclude name="META-INF/*.SF" />
             </fileset>
-    		
-            <fileset dir="${build.dir}">
-                <include name="webapp/"/>
-            	<exclude name="META-INF/*.SF" />
-            </fileset>
-    		
     		<zipgroupfileset includes="*.jar" excludes="META-INF/*.SF" dir="${basedir}/server/lib"/>
-    		
     		<zipfileset src="${build.dir}/${fullname}-server.jar" />
-
     	</jar>
-
+    	<exec executable="chmod">
+    	    <arg value="755"/>
+    	    <arg value="fatjar/openrefinefat.jar"/>
+    	</exec>
     </target>
+	
+	<target name="zipfat" depends="fatjar">
+		<mkdir dir="bambo"/>
+        <tar longfile="gnu" compression="gzip" destfile="bambo/openrefine.tar.gz">
+        	<tarfileset dir="fatjar" filemode="755" /> 
+        </tar>
+		<delete dir="fatjar" />
+	</target>
 	
     <target name="kits" depends="linux,mac,windows" 
         description="Build kits for all supported platforms">

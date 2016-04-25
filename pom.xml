@@ -12,7 +12,7 @@
 
     <properties>
         <jee.path>/</jee.path>
-        <jee.port>3333</jee.port>
+        <jee.port>3344</jee.port>
         <refine.data>/tmp/refine</refine.data>
     </properties>
 

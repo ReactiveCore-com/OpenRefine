@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ivy-settings>
     <settings defaultResolver="main" />
+    <!--<credentials host="localhost" realm="Artifactory Realm" username="admin" passwd="password" />-->
     <resolvers>
         <chain name="main">
-            <ibiblio name="local" m2compatible="true" root="http://dev.reactivecore.com:8081/artifactory/libs-release" />
+            <ibiblio name="publish" m2compatible="true" root="http://dev.reactivecore.com:8081/artifactory/libs-release-local/[organization]/[module]/[revision]/[artifact].[ext]"/>
         </chain>
     </resolvers>
 </ivy-settings>

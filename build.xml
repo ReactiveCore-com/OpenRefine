@@ -604,21 +604,17 @@
         <delete dir="${tools.dir}" />
     </target>
 
-    <!-- Reactive Core Artifatory -->
-    <property name="remote.repo.url" value="http://dev.reactivecore.com:8081/artifactory/libs-release-local" />
-    <!--<property name="remote.repo.username" value="christoph" />-->
-    <!--<property name="remote.repo.password" value="spongebob" />-->
-
-    <ivy:configure/>
-
     <target name="publish">
-        <ivy:publish resolver="artifactory-publish" overwrite="true">
-            <ivy:publish resolver="local" pubrevision="1.0">
-                <artifacts pattern="bamboo/[artifact].[ext]" />
-            </ivy:publish>
+        <ivy:configure />
+        <ivy:resolve file="ivy.xml" />
+        <ivy:publish
+                resolver="publish"
+                overwrite="true"
+                organisation="com.reactivecore"
+                module="openrefine"
+                revision="1.0">
+            <artifacts pattern="bamboo/[artifact].[ext]" />
         </ivy:publish>
     </target>
-
-
 
 </project>

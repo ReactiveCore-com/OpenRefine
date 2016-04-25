@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ivy-settings>
     <settings defaultResolver="main" />
-    <!--<credentials host="localhost" realm="Artifactory Realm" username="admin" passwd="password" />-->
+    <credentials host="${artifactory.credentials.host}" realm="${artifactory.credentials.realm}"
+                 username="${artifactory.credentials.user}" passwd="${artifactory.credentials.passwd}" />
     <resolvers>
         <chain name="main">
-            <ibiblio name="publish" m2compatible="true" root="http://dev.reactivecore.com:8081/artifactory/libs-release-local/[organization]/[module]/[revision]/[artifact].[ext]"/>
+            <ibiblio name="publish" m2compatible="true" root="http://dev.reactivecore.com:8081/artifactory/libs-release-local"/>
         </chain>
     </resolvers>
 </ivy-settings>

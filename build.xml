@@ -414,9 +414,7 @@
 	
 	<target name="zipfat" depends="fatjar">
 		<mkdir dir="bamboo"/>
-        <tar longfile="gnu" compression="gzip" destfile="bamboo/openrefine.gz">
-        	<tarfileset dir="fatjar" filemode="755" /> 
-        </tar>
+        <zip destfile="bamboo/openrefine.zip" basedir="fatjar"/>
 		<delete dir="fatjar" />
 	</target>
 	
@@ -606,15 +604,15 @@
 
     <target name="publish">
         <ivy:configure />
-        <ivy:resolve file="ivy.xml" />
         <ivy:publish
                 resolver="publish"
                 overwrite="true"
-                organisation="com.reactivecore"
+                organisation="reactivecore"
                 module="openrefine"
                 revision="1.0">
+                <!--artifactspattern="bamboo/[artifact].[ext]">-->
+            <!--<artifact name="openrefine" type="zip" ext="zip" />-->
             <artifacts pattern="bamboo/[artifact].[ext]" />
         </ivy:publish>
     </target>
-
 </project>

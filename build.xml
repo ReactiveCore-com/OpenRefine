@@ -413,7 +413,7 @@
     </target>
 	
 	<target name="zipfat" depends="fatjar">
-		<mkdir dir="bambo"/>
+		<mkdir dir="bamboo"/>
         <tar longfile="gnu" compression="gzip" destfile="bambo/openrefine.tar.gz">
         	<tarfileset dir="fatjar" filemode="755" /> 
         </tar>

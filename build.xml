@@ -6,7 +6,7 @@
     |
     +-->
     
-<project name="openrefine" default="build" basedir=".">
+<project name="openrefine" default="build" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
 
     <!-- Properties are immutable, so anything set in this file takes priority-->
     <property file="build.properties"/>
@@ -65,7 +65,7 @@
     <property name="release.name" value="openrefine-${version}" />
     <property name="windows.dir" value="${build.dir}/windows/${release.name}" />
     <property name="linux.dir" value="${build.dir}/linux/${release.name}" />
-    
+
     <!-- ================================================================== -->
     
     <path id="server.class.path">
@@ -603,5 +603,22 @@
         <delete dir="${dist.dir}" />
         <delete dir="${tools.dir}" />
     </target>
-	
+
+    <!-- Reactive Core Artifatory -->
+    <property name="remote.repo.url" value="http://dev.reactivecore.com:8081/artifactory/libs-release-local" />
+    <!--<property name="remote.repo.username" value="christoph" />-->
+    <!--<property name="remote.repo.password" value="spongebob" />-->
+
+    <ivy:configure/>
+
+    <target name="publish">
+        <ivy:publish resolver="artifactory-publish" overwrite="true">
+            <ivy:publish resolver="local" pubrevision="1.0">
+                <artifacts pattern="bamboo/[artifact].[ext]" />
+            </ivy:publish>
+        </ivy:publish>
+    </target>
+
+
+
 </project>

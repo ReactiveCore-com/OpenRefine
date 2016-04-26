@@ -604,6 +604,7 @@
 
     <target name="publish">
         <ivy:configure />
+        <ivy:resolve />
         <ivy:publish
                 resolver="publish"
                 overwrite="true"

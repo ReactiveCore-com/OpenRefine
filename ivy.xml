@@ -1,5 +1,5 @@
 <ivy-module version="2.0">
-    <info organisation="reactivecore" module="openrefine" revision="1.1"/>
+    <info organisation="reactivecore" module="openrefine" revision="1.2"/>
 
     <publications>
         <artifact name="openrefine" type="zip"/>

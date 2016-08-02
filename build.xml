@@ -611,8 +611,6 @@
                 organisation="reactivecore"
                 module="openrefine"
                 revision="1.2">
-                <!--artifactspattern="bamboo/[artifact].[ext]">-->
-            <!--<artifact name="openrefine" type="zip" ext="zip" />-->
             <artifacts pattern="bamboo/[artifact].[ext]" />
         </ivy:publish>
     </target>

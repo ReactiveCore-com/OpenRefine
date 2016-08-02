@@ -607,13 +607,13 @@
         <ivy:resolve />
         <ivy:publish
                 resolver="publish"
-                overwrite="true"
+                overwrite="false"
                 organisation="reactivecore"
                 module="openrefine"
                 revision="1.1">
                 <!--artifactspattern="bamboo/[artifact].[ext]">-->
             <!--<artifact name="openrefine" type="zip" ext="zip" />-->
-            <artifacts pattern="bamboo/[artifact].[ext]" />
+            <artifacts pattern="bamboo/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
         </ivy:publish>
     </target>
 </project>

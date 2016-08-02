@@ -414,7 +414,7 @@
 	
 	<target name="zipfat" depends="fatjar">
 		<mkdir dir="bamboo"/>
-        <zip destfile="bamboo/openrefine.zip" basedir="fatjar"/>
+        <zip destfile="bamboo/reactivecore/openrefine/1.1/openrefine-1.1.zip" basedir="fatjar"/>
 		<delete dir="fatjar" />
 	</target>
 	

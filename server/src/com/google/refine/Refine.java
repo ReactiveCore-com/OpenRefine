@@ -158,8 +158,8 @@ class RefineServer extends Server {
         Connector connector;
         if (Configurations.getBoolean("ssl.enabled", false)) {
             SslSocketConnector sslConnector = new SslSocketConnector();
-            sslConnector.setKeystore(Configurations.get("ssl.keystore.path", "/etc/openrefine/ssl/keystore.openrefine"));
-            sslConnector.setKeyPassword(Configurations.get("ssl.keystore.password", "openrefine"));
+            sslConnector.setKeystore(Configurations.get("ssl.keystore.path", "/etc/reactivecore/ssl/reactivecore.com.keystore"));
+            sslConnector.setKeyPassword(Configurations.get("ssl.keystore.password", "reactivecore"));
             connector = sslConnector;
         } else {
             connector = new SocketConnector();

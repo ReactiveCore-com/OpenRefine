@@ -414,7 +414,7 @@
 	
 	<target name="zipfat" depends="fatjar">
 		<mkdir dir="bamboo"/>
-        <zip destfile="bamboo/reactivecore/openrefine/1.1/openrefine-1.1.zip" basedir="fatjar"/>
+        <zip destfile="bamboo/openrefine.zip" basedir="fatjar"/>
 		<delete dir="fatjar" />
 	</target>
 	
@@ -610,10 +610,10 @@
                 overwrite="false"
                 organisation="reactivecore"
                 module="openrefine"
-                revision="1.1">
+                revision="1.2">
                 <!--artifactspattern="bamboo/[artifact].[ext]">-->
             <!--<artifact name="openrefine" type="zip" ext="zip" />-->
-            <artifacts pattern="bamboo/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+            <artifacts pattern="bamboo/[artifact].[ext]" />
         </ivy:publish>
     </target>
 </project>

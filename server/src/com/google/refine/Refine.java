@@ -33,13 +33,27 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package com.google.refine;
 
-import java.awt.Desktop;
+import com.codeberry.jdatapath.DataPath;
+import com.codeberry.jdatapath.JDataPathSystem;
+import com.google.util.threads.ThreadPoolExecutorAdapter;
+import org.apache.log4j.Level;
+import org.mortbay.jetty.Connector;
+import org.mortbay.jetty.Server;
+import org.mortbay.jetty.bio.SocketConnector;
+import org.mortbay.jetty.security.SslSocketConnector;
+import org.mortbay.jetty.servlet.ServletHolder;
+import org.mortbay.jetty.webapp.WebAppContext;
+import org.mortbay.util.Scanner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.net.BindException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -48,26 +62,6 @@ import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-
-import org.apache.log4j.Level;
-import org.mortbay.jetty.Connector;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.bio.SocketConnector;
-import org.mortbay.jetty.servlet.ServletHolder;
-import org.mortbay.jetty.webapp.WebAppContext;
-import org.mortbay.util.Scanner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.codeberry.jdatapath.DataPath;
-import com.codeberry.jdatapath.JDataPathSystem;
-
-import com.google.util.threads.ThreadPoolExecutorAdapter;
 
 /**
  * Main class for Refine server application.  Starts an instance of the
@@ -160,8 +154,16 @@ class RefineServer extends Server {
         threadPool = new ThreadPoolExecutor(maxThreads, maxQueue, keepAliveTime, TimeUnit.SECONDS, queue);
 
         this.setThreadPool(new ThreadPoolExecutorAdapter(threadPool));
-        
-        Connector connector = new SocketConnector();
+
+        Connector connector;
+        if (Configurations.getBoolean("ssl.enabled", false)) {
+            SslSocketConnector sslConnector = new SslSocketConnector();
+            sslConnector.setKeystore(Configurations.get("ssl.keystore.path", "/etc/openrefine/ssl/keystore.openrefine"));
+            sslConnector.setKeyPassword(Configurations.get("ssl.keystore.password", "openrefine"));
+            connector = sslConnector;
+        } else {
+            connector = new SocketConnector();
+        }
         connector.setPort(port);
         connector.setHost(host);
         connector.setMaxIdleTime(Configurations.getInteger("refine.connection.max_idle_time",60000));

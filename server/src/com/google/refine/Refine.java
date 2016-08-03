@@ -70,10 +70,14 @@ import java.util.concurrent.TimeUnit;
 public class Refine {
     
     static private final String DEFAULT_HOST = "127.0.0.1";
+    static private final String DEFAULT_SSL_HOST = "0.0.0.0";
     static private final int DEFAULT_PORT = 3333;
-        
+    static private final int DEFAULT_SSL_PORT = 3334;
+
     static private int port;
+    static private int sslPort;
     static private String host;
+    static private String sslHost;
 
     final static Logger logger = LoggerFactory.getLogger("refine");
         
@@ -95,7 +99,9 @@ public class Refine {
         org.apache.log4j.Logger.getRootLogger().setLevel(Level.toLevel(Configurations.get("refine.verbosity","info")));
 
         port = Configurations.getInteger("refine.port",DEFAULT_PORT);
+        sslPort = Configurations.getInteger("refine.sslPort",DEFAULT_SSL_PORT);
         host = Configurations.get("refine.host",DEFAULT_HOST);
+        sslHost = Configurations.get("refine.sslHost",DEFAULT_SSL_HOST);
 
         Refine refine = new Refine();
         
@@ -105,7 +111,7 @@ public class Refine {
     public void init(String[] args) throws Exception {
 
         RefineServer server = new RefineServer();
-        server.init(host,port);
+        server.init(host,port, sslHost, sslPort);
 
         boolean headless = Configurations.getBoolean("refine.headless",false);
         if (headless) {
@@ -137,8 +143,8 @@ class RefineServer extends Server {
         
     private ThreadPoolExecutor threadPool;
     
-    public void init(String host, int port) throws Exception {
-        logger.info("Starting Server bound to '" + host + ":" + port + "'");
+    public void init(String host, int port, String sslHost, int sslPort) throws Exception {
+        logger.info("Starting Server bound to '" + host + ":" + port + "' and '\" + host + \":\" + sslPort + \"' for ssl");
 
         String memory = Configurations.get("refine.memory");
         if (memory != null) {
@@ -155,20 +161,21 @@ class RefineServer extends Server {
 
         this.setThreadPool(new ThreadPoolExecutorAdapter(threadPool));
 
-        Connector connector;
-        if (Configurations.getBoolean("ssl.enabled", false)) {
-            SslSocketConnector sslConnector = new SslSocketConnector();
-            sslConnector.setKeystore(Configurations.get("ssl.keystore.path", "/etc/reactivecore/ssl/reactivecore.com.keystore"));
-            sslConnector.setKeyPassword(Configurations.get("ssl.keystore.password", "reactivecore"));
-            connector = sslConnector;
-        } else {
-            connector = new SocketConnector();
-        }
+        int connMaxIdleTime= Configurations.getInteger("refine.connection.max_idle_time", 60000);
+        Connector connector = new SocketConnector();
         connector.setPort(port);
         connector.setHost(host);
-        connector.setMaxIdleTime(Configurations.getInteger("refine.connection.max_idle_time",60000));
+        connector.setMaxIdleTime(connMaxIdleTime);
         connector.setStatsOn(false);
         this.addConnector(connector);
+
+        SslSocketConnector sslConnector = new SslSocketConnector();
+        sslConnector.setPort(sslPort);
+        sslConnector.setHost(sslHost);
+        sslConnector.setMaxIdleTime(connMaxIdleTime);
+        sslConnector.setKeystore(Configurations.get("ssl.keystore.path", "/etc/reactivecore/ssl/reactivecore.com.keystore"));
+        sslConnector.setKeyPassword(Configurations.get("ssl.keystore.password", "reactivecore"));
+        this.addConnector(sslConnector);
 
         File webapp = new File(Configurations.get("refine.webapp","main/webapp"));
 

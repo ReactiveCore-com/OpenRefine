@@ -161,7 +161,7 @@ class RefineServer extends Server {
 
         this.setThreadPool(new ThreadPoolExecutorAdapter(threadPool));
 
-        int connMaxIdleTime= Configurations.getInteger("refine.connection.max_idle_time", 60000);
+        int connMaxIdleTime = Configurations.getInteger("refine.connection.max_idle_time", 60000);
         Connector connector = new SocketConnector();
         connector.setPort(port);
         connector.setHost(host);
@@ -169,13 +169,15 @@ class RefineServer extends Server {
         connector.setStatsOn(false);
         this.addConnector(connector);
 
-        SslSocketConnector sslConnector = new SslSocketConnector();
-        sslConnector.setPort(sslPort);
-        sslConnector.setHost(sslHost);
-        sslConnector.setMaxIdleTime(connMaxIdleTime);
-        sslConnector.setKeystore(Configurations.get("ssl.keystore.path", "/etc/reactivecore/ssl/reactivecore.com.keystore"));
-        sslConnector.setKeyPassword(Configurations.get("ssl.keystore.password", "reactivecore"));
-        this.addConnector(sslConnector);
+        if(Configurations.getBoolean("ssl.enabled", false)) {
+            SslSocketConnector sslConnector = new SslSocketConnector();
+            sslConnector.setPort(sslPort);
+            sslConnector.setHost(sslHost);
+            sslConnector.setMaxIdleTime(connMaxIdleTime);
+            sslConnector.setKeystore(Configurations.get("ssl.keystore.path", "/etc/reactivecore/ssl/reactivecore.com.keystore"));
+            sslConnector.setKeyPassword(Configurations.get("ssl.keystore.password", "reactivecore"));
+            this.addConnector(sslConnector);
+        }
 
         File webapp = new File(Configurations.get("refine.webapp","main/webapp"));
 

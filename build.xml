@@ -610,7 +610,7 @@
                 overwrite="false"
                 organisation="reactivecore"
                 module="openrefine"
-                revision="1.6">
+                revision="1.7">
             <artifacts pattern="bamboo/[artifact].[ext]" />
         </ivy:publish>
     </target>

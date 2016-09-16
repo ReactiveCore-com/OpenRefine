@@ -181,17 +181,6 @@ class RefineServer extends Server {
 
         File webapp = new File(Configurations.get("refine.webapp","main/webapp"));
 
-        if (!isWebapp(webapp)) {
-            webapp = new File("main/webapp");
-            if (!isWebapp(webapp)) {
-                webapp = new File("webapp");
-                if (!isWebapp(webapp)) {
-                    logger.warn("Warning: Failed to find web application at '" + webapp.getAbsolutePath() + "'");
-                    System.exit(-1);
-                }
-            }
-        }
-
         final String contextPath = Configurations.get("refine.context_path","/");
         final int maxFormContentSize = Configurations.getInteger("refine.max_form_content_size", 1048576);
         

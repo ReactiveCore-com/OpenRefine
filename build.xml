@@ -388,13 +388,7 @@
     <target name="fatjar" depends="jar, prepare_webapp" >
     	<delete dir="fatjar" />    	
     	<mkdir dir="fatjar"/>
-        <copy todir="fatjar/webapp">
-            <fileset dir="${built.webapp.dir}">
-                <include name="**"/>
-            	<exclude name="META-INF/*.SF" />
-            </fileset>
-        </copy>
-    	<jar destfile="fatjar/openrefinefat.jar" filesetmanifest="mergewithoutmain">
+    	<jar destfile="fatjar/openrefine.jar" filesetmanifest="mergewithoutmain">
     		<manifest>
     	        <attribute name="Main-Class" value="com.google.refine.Refine"/>
     	        <attribute name="Class-Path" value="${basedir}/server/lib/*"/>
@@ -403,25 +397,29 @@
                 <include name="server/lib/"/>
             	<exclude name="META-INF/*.SF" />
             </fileset>
+            <fileset dir="${build.dir}">
+                <include name="${built.webapp.name}/**"/>
+                <exclude name="META-INF/*.SF" />
+            </fileset>
     		<zipgroupfileset includes="*.jar" excludes="META-INF/*.SF" dir="${basedir}/server/lib"/>
     		<zipfileset src="${build.dir}/${fullname}-server.jar" />
     	</jar>
     	<exec executable="chmod">
     	    <arg value="755"/>
-    	    <arg value="fatjar/openrefinefat.jar"/>
+    	    <arg value="fatjar/openrefine.jar"/>
     	</exec>
     </target>
-	
+
 	<target name="zipfat" depends="fatjar">
 		<mkdir dir="bamboo"/>
         <zip destfile="bamboo/openrefine.zip" basedir="fatjar"/>
 		<delete dir="fatjar" />
 	</target>
-	
-    <target name="kits" depends="linux,mac,windows" 
+
+    <target name="kits" depends="linux,mac,windows"
         description="Build kits for all supported platforms">
     </target>
-    
+
     <!-- ================================================================== -->
 
     <target name="prepare_reports">
@@ -610,8 +608,8 @@
                 overwrite="false"
                 organisation="reactivecore"
                 module="openrefine"
-                revision="1.7">
-            <artifacts pattern="bamboo/[artifact].[ext]" />
+                revision="1.8">
+            <artifacts pattern="fatjar/[artifact].[ext]" />
         </ivy:publish>
     </target>
 </project>

@@ -77,16 +77,6 @@ public class Refine {
     static private final int DEFAULT_PORT = 3333;
     static private final int DEFAULT_SSL_PORT = 3334;
 
-    static {
-        try {
-            if (System.getenv("CF_INSTANCE_ADDR") != null) {
-                DEFAULT_HOST = InetAddress.getLocalHost().getHostAddress();
-            }
-        } catch (UnknownHostException e) {
-            logger.error("Could not extract host information to bind to.", e);
-        }
-    }
-
     static private int port;
     static private int sslPort;
     static private String host;
@@ -111,7 +101,15 @@ public class Refine {
 
         port = Configurations.getInteger("refine.port",DEFAULT_PORT);
         sslPort = Configurations.getInteger("refine.sslPort",DEFAULT_SSL_PORT);
-        host = Configurations.get("refine.host",DEFAULT_HOST);
+        if (System.getenv("CF_INSTANCE_ADDR") != null) {
+            try {
+                host = InetAddress.getLocalHost().getHostAddress();
+            } catch (UnknownHostException e) {
+                logger.error("Could not extract host information to bind to.", e);
+            }
+        } else {
+            host = Configurations.get("refine.host",DEFAULT_HOST);
+        }
         sslHost = Configurations.get("refine.sslHost",DEFAULT_SSL_HOST);
 
         Refine refine = new Refine();

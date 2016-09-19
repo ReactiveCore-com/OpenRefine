@@ -612,7 +612,7 @@
                 overwrite="false"
                 organisation="reactivecore"
                 module="openrefine"
-                revision="1.9">
+                revision="1.10">
             <artifacts pattern="fatjar/[artifact].[ext]" />
         </ivy:publish>
     </target>

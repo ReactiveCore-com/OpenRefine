@@ -55,7 +55,9 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.net.BindException;
+import java.net.InetAddress;
 import java.net.URI;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -68,19 +70,28 @@ import java.util.concurrent.TimeUnit;
  * Jetty HTTP server / servlet container (inner class Refine Server).
  */
 public class Refine {
-    
-    static private final String DEFAULT_HOST = "127.0.0.1";
+
+    final static Logger logger = LoggerFactory.getLogger("refine");
+    static private String DEFAULT_HOST = "127.0.0.1";
     static private final String DEFAULT_SSL_HOST = "0.0.0.0";
     static private final int DEFAULT_PORT = 3333;
     static private final int DEFAULT_SSL_PORT = 3334;
+
+    static {
+        try {
+            if (System.getenv("CF_INSTANCE_ADDR") != null) {
+                DEFAULT_HOST = InetAddress.getLocalHost().getHostAddress();
+            }
+        } catch (UnknownHostException e) {
+            logger.error("Could not extract host information to bind to.", e);
+        }
+    }
 
     static private int port;
     static private int sslPort;
     static private String host;
     static private String sslHost;
 
-    final static Logger logger = LoggerFactory.getLogger("refine");
-        
     public static void main(String[] args) throws Exception {
         
         // tell jetty to use SLF4J for logging instead of its own stuff
@@ -179,7 +190,21 @@ class RefineServer extends Server {
             this.addConnector(sslConnector);
         }
 
+        //Make sure we have a local webapp folder on disk
+        new WebappExtractor("webapp.zip", "webapp/").init();
+
         File webapp = new File(Configurations.get("refine.webapp","main/webapp"));
+
+        if (!isWebapp(webapp)) {
+            webapp = new File("main/webapp");
+            if (!isWebapp(webapp)) {
+                webapp = new File("webapp");
+                if (!isWebapp(webapp)) {
+                    logger.warn("Warning: Failed to find web application at '" + webapp.getAbsolutePath() + "'");
+                    System.exit(-1);
+                }
+            }
+        }
 
         final String contextPath = Configurations.get("refine.context_path","/");
         final int maxFormContentSize = Configurations.getInteger("refine.max_form_content_size", 1048576);

@@ -383,9 +383,13 @@
         </tar>
     	
     </target>
-	
-	
-    <target name="fatjar" depends="jar, prepare_webapp" >
+
+    <!-- We create a zip with the contents of webapp to put inside the jar, as OR requires this to use embedded Jetty -->
+    <target name="zip_webapp" depends="jar, prepare_webapp">
+        <zip destfile="${build.dir}/${built.webapp.name}.zip" basedir="${build.dir}/${built.webapp.name}"/>
+    </target>
+
+    <target name="fatjar" depends="jar, prepare_webapp,zip_webapp" >
     	<delete dir="fatjar" />    	
     	<mkdir dir="fatjar"/>
     	<jar destfile="fatjar/openrefine.jar" filesetmanifest="mergewithoutmain">
@@ -398,7 +402,7 @@
             	<exclude name="META-INF/*.SF" />
             </fileset>
             <fileset dir="${build.dir}">
-                <include name="${built.webapp.name}/**"/>
+                <include name="${built.webapp.name}.zip"/>
                 <exclude name="META-INF/*.SF" />
             </fileset>
     		<zipgroupfileset includes="*.jar" excludes="META-INF/*.SF" dir="${basedir}/server/lib"/>
@@ -608,7 +612,7 @@
                 overwrite="false"
                 organisation="reactivecore"
                 module="openrefine"
-                revision="1.8">
+                revision="1.9">
             <artifacts pattern="fatjar/[artifact].[ext]" />
         </ivy:publish>
     </target>
